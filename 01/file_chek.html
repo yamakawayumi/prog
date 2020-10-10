@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+    </title>
+    <style>
+    fieldset{border:1px solid #666;padding:3px;}
+    #photarea{padding:5%;width:90%;background:black;}
+    img{width:100%}
+    #upload_btn{display:none;}
+    </style>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+<body id="main">
+
+<!-- ヘッダー -->
+<header>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+    <div class="navbar-header"><a class="navbar-brand" href="#">写真アップロード</a></div>
+    </div>
+  </nav>
+</header>
+<!-- ヘッダー -->
+<!--
+    <p>
+        <a href="#" id="select_btn" class="btn btn-primary btn-lg" style="">アップロード</a>
+    </p>
+-->
+<!-- コンテンツ -->
+<div  class="container-fluid">
+  <div class="jumbotron">
+    <h1>PHP＆JS＆HTML５</h1>
+    <p>最初にカメラ選択をおこない、サーバにアップロードします。PHP側で受け取りサーバに置く処理をおこないます。</p>
+
+    <!-- カメラ/写真選択 -->
+    <p>
+<!--    ボタンを作るイメージ-->
+        <a href="#" id="select_btn" class="btn btn-primary btn-lg">カメラ/写真選択</a>
+    </p>
+    <p>
+        <a href="#" id="upload_btn_sin" class="btn btn-primary btn-lg" style="display:none;">アップロード</a>
+    </p>
+    <!-- FILE選択 -->
+    <form method="post" action="fileinput.php" enctype="multipart/form-data">
+        <input type="file" accept="image/*" capture="camera" id="image_file" value="" name="upfile" style="display:none;">
+<!--        style="display:none;"-->
+        <button type="button" id="button" style="display:none;"></button>
+<!--        <button type="button" name="aaa" value="aaa">-->
+    </form>
+
+  </div>
+  <div id="photarea"><!-- ここにPHPの変数を記述 --></div>
+</div>
+<!-- コンテンツ -->
+
+
+<script src="js/jquery-2.1.3.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+//****************************
+//課題
+//****************************
+//1.カメラ/写真選択を押したら、File選択、アップロードボタンを出現させる。
+$("#select_btn").on("click",function(){//カメラ/写真選択を押す
+    $("#image_file").trigger("click");//File選択が自動的に開く
+});
+//2.File選択したら”Fileアップロード”ボタンを表示
+$("#image_file").on("change",function(){//File選択に動きがあったら
+    target = document.getElementById("upload_btn_sin");
+    target.style.display="";//アップロードボタン表示
+});
+//3.アップロードボタンを押したら送信される
+$("#upload_btn_sin").on("click",function(){//アップロードボタンが押されたら
+    $("#button").trigger("click");//送信ボタン
+    alert("0000000");
+});
+
+
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
