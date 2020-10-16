@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>FileAPI[info]</title>
+</head>
+<body>
+ファイル：
+<h1 style="display: none">FileDataOver!!</h1>
+<h2 style="display: none">jpeg以外はアップロードできません</h2>
+<input id="file" name="file" type="file">
+<ul>
+  <li>名前：<span id="name"></span></li>
+  <li>種類：<span id="type"></span></li>
+  <li>サイズ：<span id="size"></span></li>
+  <li>最終更新日時：<span id="lmd"></span></li>
+</ul>
+<img id="result">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    
+    
+function show_img(input){
+    //2．ファイル読み込み：準備
+    const reader = new FileReader();
+    //5．エラー処理
+    $(reader).on('error',function () {
+        alert("読み取り時にエラーが発生しました。");
+    });
+    //4．最後！！ファイルの読み込みに成功したら、image要素に表示
+    $(reader).on('load', function() {
+        //attrメソッドを使ってid属性を取得・変更する方法
+        $('#result').attr('src', reader.result);
+        alert(reader.result);//// 画像ファイルを base64 文字列に変換します
+        //<img id="result">にsrcを入れる
+    });
+    //3．ファイル読み込み：ファイルの内容をDataURL形式で取得
+    reader.readAsDataURL(input);//文字列に変換した画像をURL形式で取得する
+    //ファイルを、Data URIとして読み込むメソッドです。
+    //例えば画像ファイルをこのメソッドで読み込んで、読み込んだデータをimg要素のsrc属性に指定すればブラウザに表示できます。
+}
+function type_size_ok(input) {
+    $('#name').html(input.name);
+    $('#type').html(input.type);
+    $('#size').html(input.size / 1024);
+    $('#lmd').html(input.lastModifiedDate);
+    show_img(input)
+}
+$('#file').on('change', function() {
+    //１．ブラウザがFileAPIに対応してるかチェック
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+      //2. 指定されたファイルを選択
+      var input = $('#file').get(0).files[0]; //files[0]は最初のファイルの意味[固定値=0]
+    }
+      //3. ファイル情報をHTMLに表示
+      if (input.type != (("image/gif" == input.type) && ("image/PNG" == input.type))){
+            alert("jpegはOK");
+            $('#type').html(input.type);
+            if ( file.size/1024 < 1500 ) { //約1500;
+                alert("サイズOK");
+                type_size_ok(input)
+            } else {
+                $("h1").show();//FileDataOver!
+            }
+      }else{
+        $("h2").show();//jpeg以外はアップロードできません
+      }
+});
+
+</script>
+</body>
+</html>
