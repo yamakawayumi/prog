@@ -1,0 +1,226 @@
+
+<?php
+$data = file_get_contents('http://yumiyumi.php.xdomain.jp/get11_15.txt');
+echo $data;
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--<meta charset="UTF-8">-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Map:Geolocation</title>
+<style>html,body{height:100%;}body{padding:0;margin:0;}h1{padding:0;margin:0;font-size:50%;}</style>
+</head>
+<body>
+<style>#send_button {
+  position: absolute;
+  top: 50;
+  width: 160px;
+  height:20;
+  text-align: center;
+  border: 1px solid #232323;
+  background: #fff000;
+}</style>
+
+<!-- MAP[START] -->
+<h1>友達と位置情報共有アプリ</h1>
+<div id="myMap" style='width:60%;height:70%;float:left;'></div>
+<div id="send_button" value=""><p>友達に位置情報を送る</p></div>
+
+<script src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=Ai8bHfzmLlI91H53Zvfy2UIvFaog3WwWNjsCNvUQg7vjwRqxkQACr1xZnfTmpoRQ' async defer></script>
+<script src="../js/BmapQuery.js"></script>
+<script>
+
+//****************************************************************************************
+// BingMaps&BmapQuery
+//****************************************************************************************
+//Init
+function GetMap(){
+    const map = new Bmap("#myMap");
+    map.geolocation(function(data) {
+        //location
+        const lat = data.coords.latitude;
+        const lon = data.coords.longitude;
+        //Map
+        map.startMap(lat, lon, "load", 10);//4番目は地図の拡大縮小
+        const options = [];
+        options[0]={
+            "lat":35.762342,//緯度
+            "lon":139.969055,//経度
+            "title":"大慶園（ゲームセンター）",
+            "pinColor":"#fff000",
+            "height":300,
+            "width":320,
+            "description": '関東最大級のゲームセンター<br><img src="../img/da.jpg" width="300">',
+            "show":false
+        };
+        options[1]={
+            "lat":35.40573,
+            "lon":140.053316 ,
+            "title":"東京ドイツ村",
+            "pinColor":"#fff000",
+            "height":300,
+            "width":320,
+            "description": 'イルミネーションが有名<br><img src="../img/t.jpg" width="300">',
+            "show":false
+        };
+        options[2]={
+            "lat":35.026852,
+            "lon":140.061497,
+            "title":"アンデルセン公園",
+            "pinColor":"#fff000",
+            "height":300,
+            "width":320,
+            "description": '<br><img 船橋にあり、アスレチックができるsrc="../img/a.jpg" width="300">',
+            "show":false
+        };
+        options[3]={
+            "lat":35.639897,
+            "lon":139.862174,
+            "title":"葛西臨海水族園",
+            "pinColor":"#fff000",
+            "height":300,
+            "width":320,
+            "description": 'マグロがたくさん泳いでいる<br><img src="../img/ka.jpg" width="300">',
+            "show":false
+        };
+        options[4]={
+            "lat":35.632896,
+            "lon":139.880394,
+            "title":"ディズニーランド",
+            "pinColor":"#fff000",
+            "height":300,
+            "width":320,
+            "description": '夢の国<br><img src="../img/d.jpg" width="300">',
+            "show":false
+        };
+        options[5]={
+            "lat":35.517095,
+            "lon":138.751779,
+            "title":"河口湖",
+            "pinColor":"#fff000",
+            "height":300,
+            "width":320,
+            "description": 'ボート漕ぎが体験できる<br><img src="../img/k.jpg" width="300">',
+            "show":false
+        };
+        options[6]={//ここは作り途中です。。
+            "lat":1,
+            "lon":1,
+            "title":"友達は  現在地を共有しました！",
+            "pinColor":"",
+            "height":300,
+            "width":320,
+            "description": 'Ginkakuji<br><img src="../img/aicon.jpg" width="300">',
+            "show":false
+            //友達に位置情報を送るボタンを押す。時間位置情報を取得し、サーバーに送る
+        };
+        options[7]={
+            "lat":lat,
+            "lon":lon,
+            "title":"自分の現在地です！",
+            "pinColor":"#ff0000",
+            "height":300,
+            "width":320,
+            "description": '<br><img src="../img/aicon.jpg" width="300">',
+            "show":false
+        };
+        map.infoboxLayers(options,true);
+
+//友達に位置情報を共有するために、http://yumiyumi.php.xdomain.jp/get11_15.phpサーバーに位置情報を送信する
+//サーバー上に置いてあるget11_15.txtファイルにget11_15.phpで受け取った位置情報を書き込むまでできました。
+//サーバー上に置いてあるget11_15.txtファイルからjavascriptでHTTP通信を利用して値を取得したいのですがうまくできませんでした。。。
+            document.getElementById("send_button").onclick = function() {
+
+            var form = document.createElement('form');
+            var request = document.createElement('input');
+
+            form.method = 'POST';
+            form.action = "http://yumiyumi.php.xdomain.jp/get11_15.php";
+
+            request.type = 'hidden'; //入力フォームが表示されないように
+            request.name = 'text';
+            var lat1 = '';
+            var lon1 = '';
+            lat1 = lat;
+            lon1 = lon;
+            request.value = lat1+','+lon1;
+
+            form.appendChild(request);
+            document.body.appendChild(form);
+            form.submit();
+            alert('送信完了');
+            };
+/////
+//            var url =  'http://yumiyumi.php.xdomain.jp/get11_15.txt'; // リクエスト先URL
+//            alert('1111');
+//            fetch(url).then(function(response) {
+//              return response.text();
+//            }).then(function(text) {
+//              console.log(text);
+//            });
+//
+//
+//
+//            // URLを開く
+//            request.open('GET', url, true);
+//            var data = this.response;
+//            alert(data);
+//                        alert('11d11');
+//                        alert('1111');
+//                        alert('1111');
+//                        alert('1111');
+//                        alert('1111');
+//                        alert('1111');
+//                        alert('1111');
+//
+//            // レスポンスが返ってきた時の処理を記述 
+//            request.onload = function () {
+//                var data = this.response;
+//                  console.log(data);
+//                alert(data);
+//                alert('11d11');
+//              // レスポンスが返ってきた時の処理
+//            }
+
+// リクエストをURLに送信
+//request.send();
+//request.onreadystatechange = function () {
+////    if (request.readyState != 4) {
+////        // リクエスト中
+////    } else if (request.status != 200) {
+////        // 失敗
+////    } else {
+////        // 取得成功
+////        alert('1111');
+////         var result = request.responseText;
+////    }
+//};
+//request.send(null);
+
+    });
+
+            //------------------------------------------------------------------------
+        //1. Instance
+        //------------------------------------------------------------------------
+//        const map = new Bmap("#myMap");//あ
+        //------------------------------------------------------------------------
+        //2. Display Map
+        //------------------------------------------------------------------------
+//        map.startMap(35.039500, 135.728500, "load", 10);
+
+        //----------------------------------------------------
+        //3. Infobox
+        //   options = new Array();
+        //   options[index] = { lat, lon, width, height, title, pinColor, description, show };
+        //----------------------------------------------------
+
+}
+
+</script>
+</body>
+</html>
+
+
+
